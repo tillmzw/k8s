@@ -16,7 +16,7 @@ spec:
       values: |
         installCRDs: true
   destination:
-    server: https://github.com/tillmzw/k8s.git
+    server: 'https://kubernetes.default.svc'
     namespace: infrastructure
   syncPolicy:
     automated:
