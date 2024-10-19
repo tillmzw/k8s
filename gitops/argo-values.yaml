@@ -1,6 +1,8 @@
 argo-cd:
   ingress:
-    domain: argo.512.ch
+    enabled: true
+    hostname: argo.512.ch
+    tls: true
   server:
     config:
       url: https://argo.512.ch
