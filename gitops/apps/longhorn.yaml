@@ -14,10 +14,13 @@ spec:
     ref: repo
     helm:
       releaseName: longhorn
-  - repoURL: https://charts.longhorn.io/longhorn
+  - repoURL: https://charts.longhorn.io/
     chart: longhorn
-    targetRevision: "1.7.2"
+    targetRevision: v1.7.2
     helm:
+      values: |
+        preUpgradeChecker:
+          jobEnabled: false
       valueFiles:
       - $repo/gitops/longhorn-values.yaml
   destination:
