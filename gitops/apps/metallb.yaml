@@ -8,18 +8,10 @@ metadata:
 
 spec:
   project: infrastructure
-  sources:
-  - repoURL: https://github.com/tillmzw/k8s.git
-    targetRevision: master
-    ref: repo
-    helm:
-      releaseName: metallb
-  - repoURL: https://metallb.github.io/metallb
+  source:
+    repoURL: https://metallb.github.io/metallb
     chart: metallb
     targetRevision: "0.14.8"
-    helm:
-      valueFiles:
-      - $repo/gitops/metallb-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: infrastructure
@@ -29,3 +21,23 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PruneLast=true
+
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: default
+  namespace: infrastructure
+spec:
+  addresses:
+  - 10.0.0.15-10.0.0.15
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: default
+  namespace: infrastructure
+spec:
+  ipAddressPools:
+  - default
