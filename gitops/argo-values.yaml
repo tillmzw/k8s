@@ -1,0 +1,29 @@
+argo-cd:
+  ingress:
+    domain: argo.512.ch
+  server:
+    config:
+      url: https://argo.512.ch
+    extraArgs:
+      - --insecure
+    resources:
+      limits:
+        cpu: 250m
+        memory: 250Mi
+      requests:
+        cpu: 50m
+        memory: 250Mi
+  controller:
+    args:
+      statusProcessors: 10
+      operationProcessors: 2
+      appResyncPeriod: 300
+      selfHealTimeout: 10
+      repoServerTimeoutSeconds: 120 
+    resources:
+      limits:
+        cpu: 250m
+        memory: 400Mi
+      requests:
+        cpu: 50m
+        memory: 250Mi
