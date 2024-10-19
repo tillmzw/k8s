@@ -1,12 +1,23 @@
+configs:
+  cm:
+    url: https://argo.512.ch
+  params:
+    server.insecure: true
+
 server:
   ingress:
     enabled: true
     hostname: argo.512.ch
     tls: true
-  config:
-    url: https://argo.512.ch
-  extraArgs:
-    - --insecure
+    ingressClassName: nginx 
+  # certificate:
+  #   enabled: true
+  #   secretName: argocd-server-tls
+  #   domain: argo.512.ch
+  #   issuer:
+  #     group: cert-manager.io
+  #     kind: ClusterIssuer
+  #     name: letsencrypt-prod
   resources:
     limits:
       cpu: 250m
