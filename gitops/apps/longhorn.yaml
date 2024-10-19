@@ -16,6 +16,19 @@ spec:
       values: |
         preUpgradeChecker:
           jobEnabled: false
+        namespaceOverride: infrastructure
+        persistence:
+          defaultClassReplicaCount: 1
+        longhornUI:
+          replicas: 1
+        csi:
+          attacherReplicaCount: 1
+          provisionerReplicaCount: 1
+          resizerReplicaCount: 1
+          snapshotterReplicaCount: 1
+        ingress:
+          enabled: false
+
   destination:
     server: https://kubernetes.default.svc
     namespace: infrastructure
