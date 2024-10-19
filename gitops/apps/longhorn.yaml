@@ -8,21 +8,14 @@ metadata:
 
 spec:
   project: infrastructure
-  sources:
-  - repoURL: https://github.com/tillmzw/k8s.git
-    targetRevision: master
-    ref: repo
-    helm:
-      releaseName: longhorn
-  - repoURL: https://charts.longhorn.io/
+  source:
+    repoURL: https://charts.longhorn.io/
     chart: longhorn
     targetRevision: v1.7.2
     helm:
       values: |
         preUpgradeChecker:
           jobEnabled: false
-      valueFiles:
-      - $repo/gitops/longhorn-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: infrastructure
