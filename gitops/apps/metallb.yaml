@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metal-lb
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+
+spec:
+  project: infrastructure
+  sources:
+  - repoURL: https://github.com/tillmzw/k8s.git
+    targetRevision: master
+    ref: repo
+    helm:
+      releaseName: metallb
+  - repoURL: https://metallb.github.io/metallb
+    chart: metallb
+    targetRevision: "0.14.8"
+    helm:
+      valueFiles:
+      - $repo/gitops/metallb-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: infrastructure
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
