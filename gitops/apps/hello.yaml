@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+
+spec:
+  project: applications
+  source:
+    repoURL: https://github.com/tillmzw/k8s.git
+    targetRevision: master
+    path: gitops/charts/hello
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello
+  syncPolicy:
+    automated:
+      selfHeal: true 
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
