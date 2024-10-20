@@ -1,5 +1,5 @@
-resource "local_file" "kubeconfig-lab" {
-  content         = module.lab.kubeconfig-admin
-  filename        = "lab-config"
+resource "local_file" "kubeconfig" {
+  content         = module.cluster.kubeconfig-admin
+  filename        = "cluster-kubeconfig"
   file_permission = "0600"
 }

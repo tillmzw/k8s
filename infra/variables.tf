@@ -1,5 +1,8 @@
-variable "proxmox_api_url" {
-  type = string
+
+variable "proxmox_target_node" {
+  type        = string
+  default     = "pve"
+  description = "hostname of the proxmox node to provision on"
 }
 
 variable "proxmox_api_token_id" {
@@ -12,15 +15,24 @@ variable "proxmox_api_token_secret" {
   sensitive = true
 }
 
-variable "target_node" {
-  type        = string
-  description = "target proxmox node"
-  default     = "box"
+variable "container_root_password" {
+  type      = string
+  sensitive = true
 }
 
-variable "ssh_authorized_key" {
+variable "container_template_name" {
   type = string
 }
+
+variable "ssh_private_key_path" {
+  type = string
+}
+
+variable "ssh_public_keys" {
+  type    = list(string)
+  default = []
+}
+
 
 variable "node_fcos_version" {
   type        = string
@@ -75,24 +87,4 @@ variable "cluster_api_address" {
 variable "node_domain" {
   type        = string
   description = "domain part appended to node hostnames for a FQDN"
-}
-
-variable "matchbox_http_endpoint" {
-  type        = string
-  description = "address of matchbox server where ignition configs will be provided. this must be the HTTP endpoint, not the GRPC one."
-}
-
-variable "matchbox_ca_crt" {
-  type      = any
-  sensitive = true
-}
-
-variable "matchbox_client_key" {
-  type      = any
-  sensitive = true
-}
-
-variable "matchbox_client_crt" {
-  type      = any
-  sensitive = true
 }

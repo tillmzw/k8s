@@ -1,14 +1,14 @@
 
 resource "proxmox_vm_qemu" "controllers" {
-  for_each    = toset(["ctrl1"])
-  name        = each.key
-  target_node = "box"
+  count       = var.controller_number
+  name        = "ctrl${count.index + 1}"
+  target_node = var.target_node
 
   boot  = "order=sata0;sata1"
   agent = 0
 
-  cores  = 2
-  memory = 3072
+  cores  = var.controller_cpus
+  memory = var.controller_memory
 
   vm_state = "started"
 

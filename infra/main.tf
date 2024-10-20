@@ -1,10 +1,10 @@
 module "basics" {
   source = "./modules/basics"
 
-  proxmox_api_url          = var.proxmox_api_url
+  target_node              = var.proxmox_target_node
+  proxmox_api_url          = "https://${var.proxmox_target_node}:8006/api2/json"
   proxmox_api_token_id     = var.proxmox_api_token_id
   proxmox_api_token_secret = var.proxmox_api_token_secret
-  target_node              = "box"
 
   container_root_password = var.container_root_password
   container_template_name = var.container_template_name
@@ -16,16 +16,26 @@ module "basics" {
 module "cluster" {
   source = "./modules/cluster"
 
-  proxmox_api_url          = var.proxmox_api_url
+  target_node              = var.proxmox_target_node
+  proxmox_api_url          = "https://${var.proxmox_target_node}:8006/api2/json"
   proxmox_api_token_id     = var.proxmox_api_token_id
   proxmox_api_token_secret = var.proxmox_api_token_secret
-  target_node              = "box"
 
-  controller_names = ["ctrl1"]
-  worker_names     = ["work1"]
+  ssh_authorized_key     = var.ssh_public_keys[0]
+  matchbox_ca_crt        = module.basics.matchbox_ca_crt
+  matchbox_client_key    = module.basics.matchbox_client_key
+  matchbox_client_crt    = module.basics.matchbox_client_crt
+  matchbox_http_endpoint = "http://10.0.0.12:8080"
 
-  ssh_authorized_key  = var.ssh_public_keys[0]
-  matchbox_ca_crt     = module.basics.matchbox_ca_crt
-  matchbox_client_key = module.basics.matchbox_client_key
-  matchbox_client_crt = module.basics.matchbox_client_crt
+  controller_number = var.controller_number
+  controller_cpus   = var.controller_cpus
+  controller_memory = var.controller_memory
+
+  worker_number       = var.worker_number
+  worker_cpus         = var.worker_cpus
+  worker_memory       = var.worker_memory
+  cluster_name        = var.cluster_name
+  cluster_api_address = var.cluster_api_address
+  node_domain         = var.node_domain
+  node_fcos_version   = var.node_fcos_version
 }

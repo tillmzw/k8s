@@ -1,27 +1,22 @@
-module "lab" {
+module "cluster" {
   source = "git::https://github.com/poseidon/typhoon//bare-metal/fedora-coreos/kubernetes?ref=v1.31.1"
 
-  # bare-metal
-  cluster_name           = "lab"
-  matchbox_http_endpoint = "http://10.0.0.12:8080"
+  cluster_name           = var.cluster_name
+  matchbox_http_endpoint = var.matchbox_http_endpoint
   os_stream              = "stable"
-  os_version             = "40.20240920.3.0"
+  os_version             = var.node_fcos_version
 
-  # configuration
-  k8s_domain_name    = "lab.512.ch"
+  k8s_domain_name    = var.cluster_api_address
   ssh_authorized_key = var.ssh_authorized_key
 
-  # TODO: properly loop over controllers & workers
-  controllers = [{
-    name   = "ctrl1"
-    mac    = lower(proxmox_vm_qemu.controllers["ctrl1"].network[0].macaddr)
-    domain = "ctrl1.fritz.box"
+  controllers = [for vm in proxmox_vm_qemu.controllers : {
+    name   = vm.name
+    mac    = lower(vm.network[0].macaddr)
+    domain = "${vm.name}.${var.node_domain}"
   }]
-  workers = [
-    {
-      name   = "work1",
-      mac    = lower(proxmox_vm_qemu.workers["work1"].network[0].macaddr)
-      domain = "work1.fritz.box"
-    }
-  ]
+  workers = [for vm in proxmox_vm_qemu.workers : {
+    name   = vm.name,
+    mac    = lower(vm.network[0].macaddr)
+    domain = "${vm.name}.${var.node_domain}"
+  }]
 }

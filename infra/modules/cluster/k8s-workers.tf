@@ -1,14 +1,17 @@
 
 resource "proxmox_vm_qemu" "workers" {
-  for_each    = toset(["work1"])
-  name        = each.key
-  target_node = "box"
+  depends_on = [
+    proxmox_vm_qemu.controllers
+  ]
+  count       = var.worker_number
+  name        = "work${count.index + 1}"
+  target_node = var.target_node
 
   boot  = "order=sata0;sata1"
   agent = 0
 
-  cores  = 2
-  memory = 3072
+  cores  = var.worker_cpus
+  memory = var.worker_memory
 
   vm_state = "started"
 
