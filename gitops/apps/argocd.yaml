@@ -16,7 +16,7 @@ spec:
       releaseName: argo-cd
   - repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
-    targetRevision: "7.6.8"
+    targetRevision: "7.6.12"
     helm:
       valueFiles:
       - $repo/gitops/argo-values.yaml
