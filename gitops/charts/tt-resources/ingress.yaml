@@ -12,7 +12,7 @@ spec:
     - 5e.512.ch
     secretName: tt-resources-tls
   rules:
-  - host: hello.512.ch
+  - host: 5e.512.ch
     http:
       paths:
       - path: /2014
