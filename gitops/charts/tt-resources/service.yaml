@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dnd-5e-2014-resources
+  namespace: tt-resources
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: dnd-5e-2014-resources
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dnd-5e-2024-resources
+  namespace: tt-resources
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: dnd-5e-2024-resources

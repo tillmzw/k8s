@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnd-5e-2014-resources
+  namespace: tt-resources
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: dnd-5e-2014-resources
+  template:
+    metadata:
+      labels:
+        app: dnd-5e-2014-resources
+    spec:
+      containers:
+      - name: dnd-5e-2014-resources
+        image: ghcr.io/5etools-mirror-3/5etools-2014-img
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnd-5e-2024-resources
+  namespace: tt-resources
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: dnd-5e-2024-resources
+  template:
+    metadata:
+      labels:
+        app: dnd-5e-2024-resources
+    spec:
+      containers:
+      - name: dnd-5e-2024-resources
+        image: ghcr.io/5etools-mirror-3/5etools-2024-img
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
