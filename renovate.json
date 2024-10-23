@@ -5,7 +5,7 @@
   ],
   "assignees": ["tillmzw"],
   "argocd": {
-    "fileMatch": ["gitops/apps/\\.yaml$"]
+    "fileMatch": ["gitops/apps/.+\\.yaml$"]
   },
   "kubernetes": {
     "fileMatch": ["\\.yaml$", "\\.tpl$"]
