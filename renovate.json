@@ -4,7 +4,6 @@
     "config:base"
   ],
   "assignees": ["tillmzw"],
-  {
   "argocd": {
     "fileMatch": ["gitops/apps/\\.yaml$"]
   },
