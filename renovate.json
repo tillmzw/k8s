@@ -3,6 +3,10 @@
   "extends": [
     "config:base"
   ],
+  {
+  "argocd": {
+    "fileMatch": ["gitops/apps/\\.yaml$"]
+  },
   "kubernetes": {
     "fileMatch": ["\\.yaml$", "\\.tpl$"]
   }
