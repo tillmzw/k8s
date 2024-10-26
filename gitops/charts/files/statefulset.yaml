@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: files
+  namespace: files
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: files
+  serviceName: files
+  template:
+    metadata:
+      labels:
+        app: files
+    spec:
+      containers:
+      - name: serve
+        # TODO: have this serve e.g. https://github.com/oupala/apaxy
+        image: httpd:2-alpine
+        volumeMounts:
+        - name: shared-data
+          mountPath: /usr/local/apache2/htdocs/
+          readOnly: true
+        ports:
+        - containerPort: 80
+          name: port-serve
+        livenessProbe:
+          httpGet:
+            path: /
+            port: port-serve
+        readinessProbe:
+          httpGet:
+            path: /
+            port: port-serve
+      - name: metube
+        image: ghcr.io/alexta69/metube:2024-10-23
+        volumeMounts:
+        - name: shared-data
+          mountPath: /downloads
+        ports:
+        - containerPort: 8081
+          name: port-metube
+        envFrom:
+        - configMapRef:
+            name: metube-cfg
+        livenessProbe:
+          httpGet:
+            path: /
+            port: port-metube
+        readinessProbe:
+          httpGet:
+            path: /
+            port: port-metube
+  volumeClaimTemplates:
+  - metadata:
+      name: shared-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
