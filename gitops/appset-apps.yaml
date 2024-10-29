@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infrastructure
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/tillmzw/k8s.git
+        revision: HEAD
+        directories:
+          - path: gitops/apps/*
+  template:
+    metadata:
+      name: "{{.path.basename}}"
+    spec:
+      project: "applications"
+      source:
+        repoURL: https://github.com/tillmzw/k8s.git
+        targetRevision: HEAD
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{.path.basename}}"
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: applications
+  namespace: argocd
+spec:
+  description: "Applications"
+  destinations:
+    - server: "https://kubernetes.default.svc"
+      namespace: "*"
+  sourceRepos:
+    - "https://github.com/tillmzw/k8s.git"
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  orphanedResources:
+    warn: true
+    ignore:
+      - kind: "Secret"
+  syncWindows:
+    - kind: allow
+      schedule: "0 4 * * *"
+      duration: "2h"
+      manualSync: true
+      applications:
+        - "*"
