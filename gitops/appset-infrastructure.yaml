@@ -9,7 +9,7 @@ spec:
   generators:
     - git:
         repoURL: https://git.sr.ht/~tillmzw/k8s
-        revision: HEAD
+        revision: feature/appset
         directories:
           - path: gitops/infrastructure/*
   template:
@@ -19,7 +19,7 @@ spec:
       project: "infrastructure"
       source:
         repoURL: https://git.sr.ht/~tillmzw/k8s
-        targetRevision: HEAD
+        targetRevision: feature/appset
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc
@@ -27,33 +27,3 @@ spec:
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: infrastructure
-  namespace: argocd
-spec:
-  description: "Infrastructure components"
-  destinations:
-    - server: "https://kubernetes.default.svc"
-      namespace: "infrastructure"
-    - server: "https://kubernetes.default.svc"
-      namespace: "argocd"
-    - server: "https://kubernetes.default.svc"
-      namespace: "kube-system"
-  sourceRepos:
-    - "*"
-  clusterResourceWhitelist:
-    - group: "*"
-      kind: "*"
-  namespaceResourceWhitelist:
-    - group: "*"
-      kind: "*"
-  syncWindows:
-    - kind: allow
-      schedule: "0 2 * * *"
-      duration: "2h"
-      manualSync: true
-      applications:
-        - "*"

@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: applications
+  namespace: argocd
+spec:
+  description: "Applications"
+  destinations:
+    - server: "https://kubernetes.default.svc"
+      namespace: "*"
+  sourceRepos:
+    - "https://git.sr.ht/~tillmzw/k8s"
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  orphanedResources:
+    warn: true
+    ignore:
+      - kind: "Secret"
+  syncWindows:
+    - kind: allow
+      schedule: "0 4 * * *"
+      duration: "2h"
+      manualSync: true
+      applications:
+        - "*"
