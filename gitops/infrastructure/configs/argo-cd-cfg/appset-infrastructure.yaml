@@ -12,6 +12,7 @@ spec:
           - helmRepoURL: "https://argoproj.github.io/argo-helm"
             helmChart: "argo-cd"
             helmTargetRevision: "7.6.12"
+            namespaceOverride: "argocd"
             helmValues: |
               configs:
                 cm:
@@ -95,7 +96,7 @@ spec:
           values: '{{dig "helmValues" "" . }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{dig "namespace" "infrastructure" . }}'
+        namespace: '{{dig "namespaceOverride" "infrastructure" . }}'
       syncPolicy:
         automated:
           selfHeal: true
