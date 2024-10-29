@@ -8,7 +8,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: https://github.com/tillmzw/k8s.git
+        repoURL: https://git.sr.ht/~tillmzw/k8s
         revision: HEAD
         directories:
           - path: gitops/apps/*
@@ -18,7 +18,7 @@ spec:
     spec:
       project: "applications"
       source:
-        repoURL: https://github.com/tillmzw/k8s.git
+        repoURL: https://git.sr.ht/~tillmzw/k8s
         targetRevision: HEAD
         path: "{{.path.path}}"
       destination:
@@ -39,7 +39,7 @@ spec:
     - server: "https://kubernetes.default.svc"
       namespace: "*"
   sourceRepos:
-    - "https://github.com/tillmzw/k8s.git"
+    - "https://git.sr.ht/~tillmzw/k8s"
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
