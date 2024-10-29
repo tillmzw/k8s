@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infrastructure-configs
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://git.sr.ht/~tillmzw/k8s
+        revision: feature/appset
+        directories:
+          - path: gitops/infrastructure/configs/*
+  template:
+    metadata:
+      name: "{{.path.basename}}"
+    spec:
+      project: "infrastructure"
+      source:
+        repoURL: https://git.sr.ht/~tillmzw/k8s
+        targetRevision: feature/appset
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{.path.basename}}"
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true

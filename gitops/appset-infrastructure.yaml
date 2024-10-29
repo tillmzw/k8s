@@ -7,23 +7,79 @@ spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
-    - git:
-        repoURL: https://git.sr.ht/~tillmzw/k8s
-        revision: feature/appset
-        directories:
-          - path: gitops/infrastructure/*
+    - list:
+        elements:
+          - helmRepoURL: "https://kubernetes-sigs.github.io/metrics-server"
+            helmChart: "metrics-server"
+            helmTargetRevision: "3.12.2"
+            helmValues: |
+              args:
+                - --kubelet-preferred-address-types=InternalIP
+                - --kubelet-insecure-tls=true
+
+          - helmRepoURL: "https://metallb.github.io/metallb"
+            helmChart: "metallb"
+            helmTargetRevision: "0.14.8"
+
+          - helmRepoURL: "https://kubernetes.github.io/ingress-nginx"
+            helmChart: "ingress-nginx"
+            helmTargetRevision: "4.11.3"
+            helmValues: |
+              controller:
+                config:
+                  http-snippet: "proxy_cache_path /tmp/nginx-cache-ghost levels=1:2 keys_zone=ghost:2m use_temp_path=off max_size=1g inactive=24h;"
+                  custom-http-errors: "404,500,503"
+              defaultBackend:
+                enabled: true
+                image:
+                  registry: registry.hub.docker.com
+                  image: kenmoini/custom-nginx-ingress-errors
+                  tag: latest
+                  digest: sha256:a25d945abfcede571408e78781f86c1e3aadada5d5fb4815354496bf39daac0f
+
+          - helmRepoURL: "https://bitnami-labs.github.io/sealed-secrets"
+            helmChart: "sealed-secrets"
+            helmTargetRevision: "2.16.1"
+
+          - helmRepoURL: "https://charts.longhorn.io"
+            helmChart: "longhorn"
+            helmTargetRevision: "v1.7.2"
+            helmValues: |
+              preUpgradeChecker:
+                jobEnabled: false
+              namespaceOverride: infrastructure
+              persistence:
+                defaultClassReplicaCount: 1
+              longhornUI:
+                replicas: 1
+              csi:
+                attacherReplicaCount: 1
+                provisionerReplicaCount: 1
+                resizerReplicaCount: 1
+                snapshotterReplicaCount: 1
+              ingress:
+                enabled: false
+
+          - helmRepoURL: "https://charts.jetstack.io"
+            helmChart: "cert-manager"
+            helmTargetRevision: "1.16.1"
+
   template:
     metadata:
-      name: "{{.path.basename}}"
+      name: "{{.helmChart}}"
     spec:
       project: "infrastructure"
       source:
-        repoURL: https://git.sr.ht/~tillmzw/k8s
-        targetRevision: feature/appset
-        path: "{{.path.path}}"
+        repoURL: "{{.helmRepoURL}}"
+        targetRevision: "{{.helmTargetRevision}}"
+        chart: "{{.helmChart}}"
+        helm:
+          values: '{{dig "helmValues" "" . }}'
       destination:
         server: https://kubernetes.default.svc
         namespace: infrastructure
       syncPolicy:
+        automated:
+          selfHeal: true
         syncOptions:
           - CreateNamespace=true
