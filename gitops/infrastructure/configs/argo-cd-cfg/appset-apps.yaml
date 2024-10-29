@@ -9,7 +9,7 @@ spec:
   generators:
     - git:
         repoURL: https://git.sr.ht/~tillmzw/k8s
-        revision: feature/appset
+        revision: master
         directories:
           - path: gitops/apps/*
   template:
@@ -19,7 +19,7 @@ spec:
       project: "applications"
       source:
         repoURL: https://git.sr.ht/~tillmzw/k8s
-        targetRevision: feature/appset
+        targetRevision: master
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc
