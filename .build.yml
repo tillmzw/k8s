@@ -1,0 +1,11 @@
+image: alpine/latest
+secrets:
+  - 1800b5ba-45b3-4f21-9ec1-625b0f317000
+environment:
+  REPO: k8s
+  GH_USER: tillmzw
+tasks:
+  - push-to-gh: |
+      cd ~/"${REPO}"
+      git config --global credential.helper store
+      git push --mirror "https://github.com/${GH_USER}/${REPO}"
