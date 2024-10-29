@@ -9,6 +9,24 @@ spec:
   generators:
     - list:
         elements:
+          - helmRepoURL: "https://argoproj.github.io/argo-helm"
+            helmChart: "argo-cd"
+            helmTargetRevision: "7.6.12"
+            helmValues: |
+              configs:
+                cm:
+                  url: https://argo.512.ch
+                params:
+                  server.insecure: true
+              server:
+                ingress:
+                  enabled: true
+                  hostname: argo.512.ch
+                  tls: true
+                  ingressClassName: nginx
+                  annotations:
+                    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
           - helmRepoURL: "https://kubernetes-sigs.github.io/metrics-server"
             helmChart: "metrics-server"
             helmTargetRevision: "3.12.2"
@@ -77,7 +95,7 @@ spec:
           values: '{{dig "helmValues" "" . }}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: infrastructure
+        namespace: '{{dig "namespace" "infrastructure" . }}'
       syncPolicy:
         automated:
           selfHeal: true
