@@ -5,5 +5,5 @@ metadata:
   namespace: files
 data:
   DELETE_FILE_ON_TRASHCAN: "true"
-  URL_PREFIX: "/metube"
+  #URL_PREFIX: "/metube"
   PUBLIC_HOST_URL: "https://files.512.ch/s/"
