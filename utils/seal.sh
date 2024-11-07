@@ -10,4 +10,4 @@ else
 	echo "$INPUT --> $OUTPUT"
 fi
 
-kubeseal --controller-name sealed-secrets --format yaml < $INPUT > $OUTPUT 
+kubeseal --controller-namespace infrastructure --controller-name sealed-secrets --format yaml < $INPUT > $OUTPUT 
