@@ -11,7 +11,7 @@ This repo consists of two parts. The basic cluster setup is provisioned with the
     - matchbox will provide ignition configs for VMs with specific MAC addresses
     - certificates are configured
 - terraform provisions VMs with Fedora CoreOS and according to the spec
-- VMs boot from a custom IPXE image and await configuration
+- VMs boot from a custom iPXE image and await configuration
 - VMs will load (*extra steps required*) ignition configs from the matchbox server
 - VMs will be configured after a few minutes and form a Kubernetes cluster
 - terraform will generate a kubeconfig to connect
@@ -27,7 +27,7 @@ You should now have an ArgoCD managed Kubernetes server. :rocket:
     - default configuration, i.e. no special network configs, storage, firewalls etc.
     - a user belonging to the admin group, could be the default `root`
 - A Debian LXC image
-- A bootable IPXE ISO image. Cluster VMs need this to be able to load the boot resources over HTTPS.
+- A bootable iPXE ISO image. Cluster VMs need this to be able to load the boot resources over HTTPS.
     - Clone https://github.com/ipxe/ipxe.git
     - Enable HTTPS support (`DOWNLOAD_PROTO_HTTPS`) in `ipxe/src/config/general.h`
     - Build the ISO: `make bin/ipxe.iso`
@@ -79,19 +79,19 @@ terraform apply --target=module.basics
 terraform apply --target=module.cluster
 ```
 
-As soon as VMs are started, go to the Proxmox Web UI, open the serial console to each VM and open an IPXE command line using CTRL+B (you may need to wait for the right moment when IPXE reports having an IP address) . Until you do, the VMs will boot-loop. On the command line, enter:
+As soon as VMs are started, go to the Proxmox Web UI, open the serial console to each VM and open an iPXE command line using CTRL+B (you may need to wait for the right moment when iPXE reports having an IP address) . Until you do, the VMs will boot-loop. On the command line, enter:
 ```
 chain http://<your-matchbox-ip>:8000/boot.ipxe
 ```
 
 See the following image for reference:
 
-![IPXE command line](/.doc/ipxe-boot.png)
+![iPXE command line](/.doc/ipxe-boot.png)
 
 
 You should now see the VM download Fedora CoreOS and its ignition files from matchbox.
 
-#### Debugging IPXE
+#### Debugging iPXE
 
 If the VM can't access the matchbox server, I found the following to be helpful.
 
