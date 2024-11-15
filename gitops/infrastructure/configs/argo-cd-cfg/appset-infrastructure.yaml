@@ -11,7 +11,7 @@ spec:
         elements:
           - helmRepoURL: "https://argoproj.github.io/argo-helm"
             helmChart: "argo-cd"
-            helmTargetRevision: "7.6.12"
+            helmTargetRevision: "7.7.3"
             namespaceOverride: "argocd"
             helmValues: |
               configs:
@@ -58,7 +58,7 @@ spec:
 
           - helmRepoURL: "https://bitnami-labs.github.io/sealed-secrets"
             helmChart: "sealed-secrets"
-            helmTargetRevision: "2.16.1"
+            helmTargetRevision: "2.16.2"
 
           - helmRepoURL: "https://charts.longhorn.io"
             helmChart: "longhorn"
