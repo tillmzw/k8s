@@ -30,13 +30,27 @@ spec:
             secretKeyRef:
               name: linkding-secrets
               key: password
-        resources:
-          limits:
-            memory: 500Mi
-            cpu: 1000m
+
+        # resources:
+        #   requests:
+        #     memory: 1500Mi
+        #   limits:
+        #     memory: 1500Mi
+        #     cpu: 1000m
+
         volumeMounts:
         - name: data
           mountPath: /etc/linkding/data
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9090
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9090
+
       volumes:
       - name: data
         persistentVolumeClaim:
