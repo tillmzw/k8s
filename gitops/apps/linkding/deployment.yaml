@@ -31,12 +31,12 @@ spec:
               name: linkding-secrets
               key: password
 
-        # resources:
-        #   requests:
-        #     memory: 1500Mi
-        #   limits:
-        #     memory: 1500Mi
-        #     cpu: 1000m
+        resources:
+          requests:
+            memory: 1000Mi
+          limits:
+            memory: 1000Mi
+            cpu: 1000m
 
         volumeMounts:
         - name: data
