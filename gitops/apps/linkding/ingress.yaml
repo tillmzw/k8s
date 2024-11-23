@@ -6,6 +6,10 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - ld.512.ch
+    secretName: linkding-tls
   rules:
   - host: ld.512.ch
     http:
