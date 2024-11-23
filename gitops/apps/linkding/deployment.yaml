@@ -19,6 +19,7 @@ spec:
         image: sissbruecker/linkding:1.36.0-plus-alpine
         ports:
         - containerPort: 9090
+          name: http
         env:
         - name: LD_SUPERUSER_NAME
           valueFrom:
@@ -33,25 +34,31 @@ spec:
 
         resources:
           requests:
-            memory: 1000Mi
+            memory: 500Mi
           limits:
-            memory: 1000Mi
-            cpu: 1000m
+            memory: 750Mi
+            cpu: "1"
 
         volumeMounts:
         - name: data
           mountPath: /etc/linkding/data
+        - name: uwsgi-ini
+          mountPath: /etc/linkding/uwsgi.ini
+          subPath: uwsgi.ini
 
         readinessProbe:
           httpGet:
             path: /
-            port: 9090
+            port: http
         livenessProbe:
           httpGet:
-            path: /
-            port: 9090
+            path: /health
+            port: http
 
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: linkding-data
+      - name: uwsgi-ini
+        configMap:
+          name: uwsgi-ini
