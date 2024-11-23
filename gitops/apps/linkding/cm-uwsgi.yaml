@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uwsgi-ini
+data:
+  uwsgi.ini: | 
+    [uwsgi]
+    # max-fd is determined to be MAXINT, which simply explodes mem usage. limit this to a sensible default.
+    max-fd = 1048576
+    # the rest is default content from uwsgi.ini
+    module = siteroot.wsgi:application
+    env = DJANGO_SETTINGS_MODULE=siteroot.settings.prod
+    static-map = /static=static
+    static-map = /static=data/favicons
+    static-map = /static=data/previews
+    processes = 2
+    threads = 2
+    pidfile = /tmp/linkding.pid
+    vacuum=True
+    stats = 127.0.0.1:9191
+    uid = www-data
+    gid = www-data
+    buffer-size = 8192
+    die-on-term = true
+
+    if-env = LD_CONTEXT_PATH
+    static-map = /%(_)static=static
+    static-map = /%(_)static=data/favicons
+    static-map = /%(_)static=data/previews
+    endif =
+
+    if-env = LD_REQUEST_TIMEOUT
+    http-timeout = %(_)
+    socket-timeout = %(_)
+    harakiri = %(_)
+    endif =
+
+    if-env = LD_LOG_X_FORWARDED_FOR
+    log-x-forwarded-for = %(_)
+    endif =
+
+    if-env = LD_DISABLE_REQUEST_LOGS=true
+    disable-logging = true
+    log-4xx = true
+    log-5xx = true
+    endif =

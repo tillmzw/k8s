@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkding
+  labels:
+    app: linkding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linkding
+  template:
+    metadata:
+      labels:
+        app: linkding
+    spec:
+      containers:
+      - name: linkding
+        image: sissbruecker/linkding:1.36.0-plus-alpine
+        ports:
+        - containerPort: 9090
+          name: http
+        env:
+        - name: LD_SUPERUSER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: linkding-secrets
+              key: username
+        - name: LD_SUPERUSER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: linkding-secrets
+              key: password
+
+        resources:
+          requests:
+            memory: 500Mi
+          limits:
+            memory: 750Mi
+            cpu: "1"
+
+        volumeMounts:
+        - name: data
+          mountPath: /etc/linkding/data
+        - name: uwsgi-ini
+          mountPath: /etc/linkding/uwsgi.ini
+          subPath: uwsgi.ini
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: linkding-data
+      - name: uwsgi-ini
+        configMap:
+          name: uwsgi-ini
