@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: dnd-5e-2014-resources
-        image: ghcr.io/5etools-mirror-3/5etools-2014-src:1.210.15
+        image: ghcr.io/5etools-mirror-3/5etools-2014-src:1.210.16
         ports:
         - containerPort: 80
         resources:
