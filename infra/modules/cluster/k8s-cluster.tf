@@ -1,5 +1,5 @@
 module "cluster" {
-  source = "git::https://github.com/poseidon/typhoon//bare-metal/fedora-coreos/kubernetes?ref=v1.31.1"
+  source = "git::https://github.com/poseidon/typhoon//bare-metal/fedora-coreos/kubernetes?ref=v1.31.2"
 
   cluster_name           = var.cluster_name
   matchbox_http_endpoint = var.matchbox_http_endpoint
